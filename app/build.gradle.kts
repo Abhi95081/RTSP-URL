@@ -43,6 +43,10 @@ android {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
     packaging {
+        pickFirst("lib/arm64-v8a/libc++_shared.so")
+        pickFirst("lib/x86_64/libc++_shared.so")
+        pickFirst("lib/x86/libc++_shared.so")
+        pickFirst("lib/armeabi-v7a/libc++_shared.so")
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
@@ -77,7 +81,10 @@ dependencies {
     implementation("org.videolan.android:libvlc-all:4.0.0-eap8")
 
     // FFmpegKit (for recording RTSP)
-    implementation("com.arthenica:ffmpeg-kit-full-gpl:6.0")
+  //  implementation("com.arthenica:ffmpeg-kit-full-gpl:6.0")
+
+    implementation("com.arthenica:ffmpeg-kit-full-gpl:6.0.LTS")
+
 
 
 }
