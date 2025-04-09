@@ -72,7 +72,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Compose BOM
-    implementation(platform("androidx.compose:compose-bom:2024.03.00"))
+//    implementation(platform("androidx.compose:compose-bom:2024.03.00"))
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
@@ -82,7 +82,6 @@ dependencies {
 
     // FFmpegKit (for recording RTSP)
   //  implementation("com.arthenica:ffmpeg-kit-full-gpl:6.0")
-
     implementation("com.arthenica:ffmpeg-kit-full-gpl:6.0.LTS")
 
 

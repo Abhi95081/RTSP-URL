@@ -89,6 +89,7 @@ class MainActivity : ComponentActivity() {
         var rtspUrl by remember { mutableStateOf(TextFieldValue("rtsp://35.171.173.241:65311/remmiedd")) }
         var isRecording by remember { mutableStateOf(false) }
         var scale by remember { mutableFloatStateOf(1f) }
+        var isMaximized by remember { mutableStateOf(false) }
         coroutineScope = rememberCoroutineScope()
 
         Scaffold(
@@ -109,7 +110,6 @@ class MainActivity : ComponentActivity() {
                         )
                     )
             ) {
-                // ✅ Keep video always visible at top
                 AndroidView(
                     factory = { ctx ->
                         SurfaceView(ctx).apply {
@@ -122,7 +122,7 @@ class MainActivity : ComponentActivity() {
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(16f / 9f)
+                        .height(if (isMaximized) 300.dp else (16 * 24).dp)
                         .clip(RoundedCornerShape(12.dp))
                         .background(Color.Black)
                         .pointerInput(Unit) {
@@ -193,20 +193,30 @@ class MainActivity : ComponentActivity() {
                                 Text(if (isRecording) "Stop Recording" else "Start Recording")
                             }
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                Button(
-                                    onClick = {
-                                        val params = PictureInPictureParams.Builder()
-                                            .setAspectRatio(Rational(16, 9))
-                                            .build()
-                                        (context as? ComponentActivity)?.enterPictureInPictureMode(params)
-                                    },
-                                    modifier = Modifier.fillMaxWidth()
-                                ) {
-                                    Icon(Icons.Default.Add, contentDescription = null)
-                                    Spacer(Modifier.width(8.dp))
-                                    Text("Enter PiP Mode")
-                                }
+                            Button(
+                                onClick = { isMaximized = !isMaximized },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(
+                                    if (isMaximized) Icons.Default.ArrowForward else Icons.Default.ArrowBack,
+                                    contentDescription = null
+                                )
+                                Spacer(Modifier.width(8.dp))
+                                Text(if (isMaximized) "Minimize Video" else "Maximize Video")
+                            }
+
+                            Button(
+                                onClick = {
+                                    val params = PictureInPictureParams.Builder()
+                                        .setAspectRatio(Rational(16, 9))
+                                        .build()
+                                    (context as? ComponentActivity)?.enterPictureInPictureMode(params)
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Icon(Icons.Default.Add, contentDescription = null)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Enter PiP Mode")
                             }
 
                             Button(
@@ -243,7 +253,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
 
     private fun startPlayback(url: String) {
         mediaPlayer = MediaPlayer(libVLC).apply {
